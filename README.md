@@ -66,7 +66,7 @@ cat *.*|wwwordlist --nh 4 --cl --co  --max 10 -full|ffuf -recursion -w - -u http
 ```
 Want to throw waybackurls in the mix? Use:
 ```
-cat domains.txt|waybackurls| xargs -n1 wget -qO - |wwwordlist -full
+cat domains.txt | waybackurls | xargs -n1 wget -qO - | wwwordlist -full
 ```
 # Contribute?
 Do you have some usefull additions to the script, please send in a pull request to help make this script better :)
