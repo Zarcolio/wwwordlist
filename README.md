@@ -13,15 +13,16 @@ If you're running into trouble running wwwordlist, please drop me an issue and I
 
 # Usage
 ```
-usage: wwwordlist [-h] [-text] [-links] [--co] [--cl] [--cu] [--nh <length>] [--ni] [--dui] 
-[--min <length>] [--max <length>]
+usage: wwwordlist [-h] [-text] [-links] [-full] [--co] [--cl] [--cu] [--nh <length>] [--ni] 
+[--dui] [--min <length>] [--max <length>]
 
 Use wwwordlist to generate a wordlist from either text or the links in HTML.
 
 optional arguments:
   -h, --help      show this help message and exit
   -text           Analyze the text between HTML tags.
-  -links          Analyze the links inside the provide text (can be HTML, JS, CSS or whatever.).
+  -links          Analyze the links inside the provide text (can be HTML, JS, CSS or whatever).
+  -full           Analyze the full text (can be HTML, JS, CSS or whatever).
   --co            Leave original case. If no case type is specified, -cl is the default. If another case 
                   is specified, -cl has to be specified to be included.
   --cl            Apply lower case.
