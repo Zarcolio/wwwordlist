@@ -91,6 +91,7 @@ def TextTransform(strTotalInput):
     strTotalInput = strTotalInput.replace("“", " ")
     strTotalInput = strTotalInput.replace("”", " ")
     strTotalInput = strTotalInput.replace("²", " ")
+    strTotalInput = strTotalInput.replace("…", " ")
     
     
     for i in range(33, 48):
@@ -124,6 +125,10 @@ def TextTransform(strTotalInput):
     if lArgs.cu == True:
         strTotalInput2 += strTotalInput.upper()
 
+    strTotalInput3 = strTotalInput
+    for i in range(0, 9):
+        strTotalInput3 = strTotalInput3.replace(str(i),"")
+    strTotalInput += strTotalInput3
 
     return strTotalInput2
     
@@ -175,7 +180,7 @@ def TextAnalysis(strTotalInput):
         print(result)    
 
 def HasHex(strInput):
-    regex = r"^.*[a-f0-9]{" + lArgs.nh + ",}$"
+    regex = r"^.*[a-f0-9_\-]{" + lArgs.nh + ",}$"
     matches = re.match(regex, strInput, re.IGNORECASE)
     if matches:
         return True
