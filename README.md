@@ -64,7 +64,7 @@ If you want to build a big wordlist based on whole website and run it through ff
 wget -nd -r example.com -q -E  -R woff,jpg,gif,eot,ttf,svg,png,otf,pdf,exe,zip,rar,tgz,docx,ico,jpeg
 cat *.*|wwwordlist --nh 4 --cl --co  --max 10 -full|ffuf -recursion -w - -u https://example.com/FUZZ -r
 ```
-Want to throw waybackurls in the mix? Use:
+Want to throw [waybackurls](https://github.com/tomnomnom/waybackurls) in the mix? Use:
 ```
 cat domains.txt | waybackurls | xargs -n1 wget -qO - | wwwordlist -full
 ```
