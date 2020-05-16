@@ -57,12 +57,12 @@ cat index.html|wwwordlist -text --nh 4 --co --cl --cu --min 1
 ```
 If you want to build a wordlist based on the text from a webpage, simply run:
 ```
-wget -qO - twitter.com|wwwordlist -text
+wget -qO - example.com|wwwordlist -text
 ```
 If you want to build a big wordlist based on whole website and run it through ffuf, try:
 ```
-wget -nd -r help.uber.com -q -E  -R woff,jpg,gif,eot,ttf,svg,png,otf,pdf,exe,zip,rar,tgz,docx,ico,jpeg
-cat *.*|wwwordlist --nh 4 --cl --co  --max 10 -full|ffuf -recursion -w - -u https://help.uber.com/FUZZ -r
+wget -nd -r example.com -q -E  -R woff,jpg,gif,eot,ttf,svg,png,otf,pdf,exe,zip,rar,tgz,docx,ico,jpeg
+cat *.*|wwwordlist --nh 4 --cl --co  --max 10 -full|ffuf -recursion -w - -u https://example.com/FUZZ -r
 ```
 
 # Contribute?
