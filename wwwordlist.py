@@ -21,8 +21,8 @@ def GetArguments():
     # Get some commandline arguments:
     argParser=argparse.ArgumentParser(description='Use wwwordlist to generate a wordlist from either text or the links in HTML.')
     argParser.add_argument('-text', help='Analyze the text between HTML tags.', action="store_true")
-    argParser.add_argument('-links', help='Analyze the links inside the provide text (can be HTML, JS, CSS or whatever.).', action="store_true")
-    argParser.add_argument('-full', help='Analyze the text (can be HTML, JS, CSS or whatever.).', action="store_true")
+    argParser.add_argument('-links', help='Analyze the links inside the provide text (can be HTML, JS, CSS or whatever).', action="store_true")
+    argParser.add_argument('-full', help='Analyze the full text (can be HTML, JS, CSS or whatever).', action="store_true")
     argParser.add_argument('--co', help='Leave original case. If no case type is specified, -cl  is the default. If another case is specified, -cl has to be specified to be included.', action="store_true")
     argParser.add_argument('--cl', help='Apply lower case.', action="store_true")
     argParser.add_argument('--cu', help='Apply upper case.', action="store_true")
