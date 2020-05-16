@@ -2,7 +2,7 @@
 wwwordlist takes input from stdin and extracts words from either text in HTML (extracted with BS4) or links found in the supplied text.
 
 # Why use wwwordlist?
-Because [Stök](https://twitter.com/stokfredrik) says you should good wordlists, based on the content of the target. This is my attempt on creating a tool that supports this.
+Because [Stök](https://twitter.com/stokfredrik) says you should use good wordlists, based on the content of the target. This is my attempt on creating a tool that supports this.
 
 # Install
 Grepaddr should be able to run with a default Kali Linux installation with BS4 installed. To install BS4:
