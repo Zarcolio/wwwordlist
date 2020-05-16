@@ -22,6 +22,7 @@ def GetArguments():
     argParser=argparse.ArgumentParser(description='Use wwwordlist to generate a wordlist from either text or the links in HTML.')
     argParser.add_argument('-text', help='Analyze the text between HTML tags.', action="store_true")
     argParser.add_argument('-links', help='Analyze the links inside the provide text (can be HTML, JS, CSS or whatever.).', action="store_true")
+    argParser.add_argument('-full', help='Analyze the text (can be HTML, JS, CSS or whatever.).', action="store_true")
     argParser.add_argument('--co', help='Leave original case. If no case type is specified, -cl  is the default. If another case is specified, -cl has to be specified to be included.', action="store_true")
     argParser.add_argument('--cl', help='Apply lower case.', action="store_true")
     argParser.add_argument('--cu', help='Apply upper case.', action="store_true")
@@ -259,6 +260,51 @@ def LinkAnalysis(strTotalInput):
 lArgs = GetArguments()
 requests.packages.urllib3.disable_warnings() 
 
+
+def FullAnalysis(strTotalInput):
+    dEndResult = {}
+
+    strTotalInput = TextTransform(strTotalInput)
+    lInput = strTotalInput.split(" ")
+    
+    for sInput in lInput:
+        sInput = sInput.strip()
+
+        if len(sInput) >= int(lArgs.min) and len(sInput) > 1:
+            if lArgs.max and len(sInput) > int(lArgs.max):
+                continue
+
+            if lArgs.dui and ("_" in sInput or "-" in sInput):
+                continue
+            
+            # if first char is - or _ remove it:
+            if sInput[0] == "_":
+                sInput = sInput.replace("_", "", 1)
+            if sInput[0] == "-":
+                sInput = sInput.replace("-", "", 1)
+
+            # if last char is - or _ remove it:
+            if sInput[len(sInput)-1] == "_":
+                sInput = sInput[:len(sInput)-1]
+                
+            # if a string only consists of dashes and underscores, the result will be an empty string and breaks...
+            if len(sInput) == 0:
+                continue
+            
+            if sInput[len(sInput)-1] == "-":
+                sInput = sInput[:len(sInput)-1]
+
+            if lArgs.ni == False and lArgs.nh == False:
+                dEndResult[sInput] = sInput
+
+            if lArgs.ni == True and not sInput.isdigit():
+                dEndResult[sInput] = sInput
+                
+            if int(lArgs.nh) > 0 and not HasHex(sInput):
+                dEndResult[sInput] = sInput
+
+    for result in sorted(dEndResult):
+        print(result)        
 
 def main():
 
