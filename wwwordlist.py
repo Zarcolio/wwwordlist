@@ -22,6 +22,7 @@ def GetArguments():
     argParser=argparse.ArgumentParser(description='Use wwwordlist to generate a wordlist from either text or the links in HTML.')
     argParser.add_argument('-text', help='Analyze the text between HTML tags.', action="store_true")
     argParser.add_argument('-links', help='Analyze the links inside the provide text (can be HTML, JS, CSS or whatever).', action="store_true")
+    argParser.add_argument('-quotes', help='Analyze text inside quotes (usefull when analyzing source code).', action="store_true")
     argParser.add_argument('-full', help='Analyze the full text (can be HTML, JS, CSS or whatever).', action="store_true")
     argParser.add_argument('--co', help='Leave original case. If no case type is specified, -cl  is the default. If another case is specified, -cl has to be specified to be included.', action="store_true")
     argParser.add_argument('--cl', help='Apply lower case.', action="store_true")
@@ -84,7 +85,10 @@ def GetWords(sHtml):
     return sText
 
 def TextTransform(strTotalInput):
-    
+    strTotalInput = urllib.parse.unquote(strTotalInput)
+    strTotalInput = urllib.parse.unquote(strTotalInput)
+    strTotalInput = html.unescape(strTotalInput)
+
     strTotalInput = strTotalInput.replace("\n", " ")
     strTotalInput = strTotalInput.replace("‘", " ")
     strTotalInput = strTotalInput.replace("’", " ")
@@ -179,6 +183,53 @@ def TextAnalysis(strTotalInput):
     for result in sorted(dEndResult):
         print(result)    
 
+def QuotedAnalysis(strTotalInput):
+    strTotalInput = GetQuoted(strTotalInput)
+
+    dEndResult = {}
+    strTotalInput = TextTransform(strTotalInput)
+    lInput = strTotalInput.split(" ")
+    
+    for sInput in lInput:
+        sInput = sInput.strip()
+
+        if len(sInput) >= int(lArgs.min) and len(sInput) > 1:
+            if lArgs.max and len(sInput) > int(lArgs.max):
+                continue
+
+            if lArgs.dui and ("_" in sInput or "-" in sInput):
+                continue
+            
+            # if first char is - or _ remove it:
+            if sInput[0] == "_":
+                sInput = sInput.replace("_", "", 1)
+            if sInput[0] == "-":
+                sInput = sInput.replace("-", "", 1)
+
+            # if last char is - or _ remove it:
+            if sInput[len(sInput)-1] == "_":
+                sInput = sInput[:len(sInput)-1]
+                
+            # if a string only consists of dashes and underscores, the result will be an empty string and breaks...
+            if len(sInput) == 0:
+                continue
+            
+            if sInput[len(sInput)-1] == "-":
+                sInput = sInput[:len(sInput)-1]
+
+            if lArgs.ni == False and lArgs.nh == False:
+                dEndResult[sInput] = sInput
+
+            if lArgs.ni == True and not sInput.isdigit():
+                dEndResult[sInput] = sInput
+                
+            if int(lArgs.nh) > 0 and not HasHex(sInput):
+                dEndResult[sInput] = sInput
+
+                    
+    for result in sorted(dEndResult):
+        print(result)       
+
 def HasHex(strInput):
     regex = r"^.*[a-f0-9_\-]{" + lArgs.nh + ",}$"
     matches = re.match(regex, strInput, re.IGNORECASE)
@@ -209,6 +260,13 @@ def RelUrlsQuoted(strInput):
         lMatches.append(match.group(2))
     return lMatches
 
+def GetQuotedStrings(strInput):
+    regex = r"([\"'])(?:(?=(\\?))\2.)*?\1"
+    matches = re.finditer(regex, strInput, re.IGNORECASE)
+    lMatches = []
+    for matchNum, match in enumerate(matches, start=1):
+        lMatches.append(match.group(2))
+    return lMatches
 
 def LinkAnalysis(strTotalInput):
     lUrls = Urls(strTotalInput)
@@ -219,9 +277,6 @@ def LinkAnalysis(strTotalInput):
     sLArgeTotal = ""
     
     for d in lTotal:
-        d = urllib.parse.unquote(d)
-        d = urllib.parse.unquote(d)
-        d = html.unescape(d)
         d = unescape_replace(d)
         d = d.replace("https://","")
         d = d.replace("http://","")
