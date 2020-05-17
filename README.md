@@ -68,5 +68,10 @@ Want to throw [waybackurls](https://github.com/tomnomnom/waybackurls) in the mix
 ```
 cat domains.txt | waybackurls | xargs -n1 wget -qO - | wwwordlist -full
 ```
+Got a Git repo clone locally? Try the following command inside the clone folder:
+```
+find . -type f -exec strings  {} +|wwwordlist -full
+```
+
 # Contribute?
 Do you have some usefull additions to the script, please send in a pull request to help make this script better :)
