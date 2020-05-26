@@ -24,8 +24,8 @@ optional arguments:
   -links          Analyze the links inside the provide text.
   -quoted         Analyze text inside quotes.
   -full           Analyze the full text (can be HTML, JS, CSS or whatever).
-  --co            Leave original case. If no case type is specified, -cl is the default. If another case
-                  is specified, -cl has to be specified to be included.
+  --co            Leave original case. If no case type is specified, -cl is the default. If another case is
+                  specified, -cl has to be specified to be included.
   --cl            Apply lower case.
   --cu            Apply upper case.
   --nh <length>   Ignore values containing a valid hexadecimal number of this length.
