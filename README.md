@@ -69,7 +69,7 @@ Want to throw [waybackurls](https://github.com/tomnomnom/waybackurls) in the mix
 ```
 cat domains.txt | waybackurls | xargs -n1 wget -qO - | wwwordlist -full
 ```
-Got a Git repo clone locally? Try the following command inside the clone folder:
+Got a Git repo cloned locally? Try the following command inside the clone folder:
 ```
 find . -type f -exec strings  {} +|wwwordlist -full
 ```
