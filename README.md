@@ -22,9 +22,9 @@ optional arguments:
   -h, --help            show this help message and exit
   -type <text|urls|quoted|full>
                         Analyze the text between HTML tags, inside urls found, inside quoted text or in the
-                        full text.
-  --case <o|l|u>        Apply original, lower or upper case. If no case type is specified, lower case is the
-                        default. If another case is specified, lower has to be specified to be included.
+                        full text. Defaults to 'full'.
+  --case <o|l|u>        Apply original, lower or upper case. If no case type is specified, lower case is
+                        the default. If another case is specified, lower has to be specified to be included.
                         Spearate by comma's
   --ih <length>         Ignore values containing a valid hexadecimal number of this length.
   --ii                  Ignore words that are a valid integer number.
