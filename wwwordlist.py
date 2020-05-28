@@ -250,12 +250,16 @@ def main():
     elif lTypeArgs == "text":
         strTotalInput = GetHtmlWords(strTotalInput)
         lMatches = Strings(strTotalInput)
-    elif lTypeArgs == "links":
+    elif lTypeArgs == "urls":
         strTotalInput = GetLinks(strTotalInput)
         lMatches = Strings(strTotalInput)
     elif lTypeArgs == "quoted":
         strTotalInput  = GetQuotedStrings(strTotalInput)
         lMatches = Strings(strTotalInput)
+    else:
+        sys.stderr.write("Invalid type.\n\n")
+        sys.exit(2)
+        
         
     z = ToPlainText(lMatches)
     z = ReplaceInsideWords(z)
