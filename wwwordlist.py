@@ -9,7 +9,19 @@ import requests
 import codecs
 import re
 import urllib
-import html
+import unicodedata
+
+def GetArguments():
+    # Get some commandline arguments:
+    argParser=argparse.ArgumentParser(description='Use wwwordlist to generate a wordlist from either text or the links in HTML.')
+    argParser.add_argument('-type', metavar="<text|urls|quoted|full>", help='Analyze the text between HTML tags, inside urls found, inside quoted text or in the full text. Defaults to \'full\'.')
+    argParser.add_argument('--case', metavar="<o|l|u>", help='Apply original, lower or upper case. If no case type is specified, lower case is the default. If another case is specified, lower has to be specified to be included. Spearate by comma\'s')
+    argParser.add_argument('--ih', metavar="<length>", help='Ignore values containing a valid hexadecimal number of this length.', default=False)
+    argParser.add_argument('--ii', help='Ignore words that are a valid integer number.', action="store_true", default=False)
+    argParser.add_argument('--idu', help='Ignore words containing a dash or underscore, but break them in parts.', action="store_true", default=False)
+    argParser.add_argument('--min', metavar="<length>", help='Defines the minimum length of a word to add to the wordlist, defaults to 3.', default=3)
+    argParser.add_argument('--max', metavar="<length>", help='Defines the maximum length of a word to add to the wordlist, defaults to 10', default=10)
+    return argParser.parse_args()
 
 def SignalHandler(sig, frame):
     # Create a break routine:
@@ -18,22 +30,16 @@ def SignalHandler(sig, frame):
 
 signal.signal(signal.SIGINT, SignalHandler)
 
-def GetArguments():
-    # Get some commandline arguments:
-    argParser=argparse.ArgumentParser(description='Use wwwordlist to generate a wordlist from either text or the links in HTML.')
-    argParser.add_argument('-text', help='Analyze the text between HTML tags.', action="store_true")
-    argParser.add_argument('-links', help='Analyze the links inside the provide text.', action="store_true")
-    argParser.add_argument('-quoted', help='Analyze text inside quotes.', action="store_true")
-    argParser.add_argument('-full', help='Analyze the full text (can be HTML, JS, CSS or whatever).', action="store_true")
-    argParser.add_argument('--co', help='Leave original case. If no case type is specified, -cl  is the default. If another case is specified, -cl has to be specified to be included.', action="store_true")
-    argParser.add_argument('--cl', help='Apply lower case.', action="store_true")
-    argParser.add_argument('--cu', help='Apply upper case.', action="store_true")
-    argParser.add_argument('--nh', metavar="<length>", help='Ignore values containing a valid hexadecimal number of this length.', default=False)
-    argParser.add_argument('--ni', help='Ignore values that are a valid integer number.', action="store_true", default=False)
-    argParser.add_argument('--dui', help='Ignore values containing a dash or underscore.', action="store_true", default=False)
-    argParser.add_argument('--min', metavar="<length>", help='Defines the minimum length of a word to add to the wordlist, defaults to 3.', default=3)
-    argParser.add_argument('--max', metavar="<length>", help='Defines the maximum length of a word to add to the wordlist.')
-    return argParser.parse_args()
+def StripAccents(text):
+    # Remove diacritics from text
+    try:
+        text = unicode(text, 'utf-8')
+    except (TypeError, NameError): # unicode is a default on python 3 
+        pass
+    text = unicodedata.normalize('NFD', text)
+    text = text.encode('ascii', 'ignore')
+    text = text.decode("utf-8")
+    return str(text)
 
 ESCAPE_SEQUENCE_RE = re.compile(r'''
     ( \\U........      # 8-digit hex escapes
@@ -44,7 +50,7 @@ ESCAPE_SEQUENCE_RE = re.compile(r'''
     | \\[\\'"abfnrtv]  # Single-character escapes
     )''', re.UNICODE | re.VERBOSE)
 
-def unescape_replace(s):
+def Unescape(s):
     # replace = hack because / and . cannot be unescaped:
     s = s.replace("\/", "/")
     s = s.replace("\.", ".")
@@ -59,7 +65,7 @@ def unescape_replace(s):
 
     return ESCAPE_SEQUENCE_RE.sub(unescape_match, s)
 
-def GetWords(sHtml):
+def GetHtmlWords(sHtml):
     sHtml = sHtml.replace("><","> <")   # needed becasue BS4 sometime concatenates words when it shouldn't
     soup = BeautifulSoup(sHtml, 'html.parser')
     
@@ -67,7 +73,7 @@ def GetWords(sHtml):
     for script in soup(["script", "style"]):
         script.extract()    # rip it out
     
-    # get text
+    # get text from HTML
     sText = soup.get_text()
     
     # break into lines and remove leading and trailing space on each
@@ -78,103 +84,8 @@ def GetWords(sHtml):
     sText = '\n'.join(chunk for chunk in chunks if chunk)
     return sText
 
-def TextTransform(strTotalInput):
-    strTotalInput = urllib.parse.unquote(strTotalInput)
-    strTotalInput = urllib.parse.unquote(strTotalInput)
-    strTotalInput = html.unescape(strTotalInput)
-    strTotalInput = strTotalInput.replace("\n", " ")
-    strTotalInput = strTotalInput.replace("‘", " ")
-    strTotalInput = strTotalInput.replace("’", " ")
-    strTotalInput = strTotalInput.replace("“", " ")
-    strTotalInput = strTotalInput.replace("”", " ")
-    strTotalInput = strTotalInput.replace("²", " ")
-    strTotalInput = strTotalInput.replace("…", " ")
-    
-    for i in range(33, 48):
-        if i != 45:     # we want to keep dashes
-            strTotalInput = strTotalInput.replace(chr(i), " ")
-    for i in range(58, 65):
-        strTotalInput = strTotalInput.replace(chr(i), " ")
-    for i in range(91, 97):
-        if i != 95:     # we want to keep underscores
-            strTotalInput = strTotalInput.replace(chr(i), " ")
-    for i in range(123, 127):
-        strTotalInput = strTotalInput.replace(chr(i), " ")
-    #strTotalInput = strTotalInput.lower()
-    
-    # Also try with - and _ as separator:
-    if not lArgs.dui:
-        strTotalInput2 = strTotalInput.replace("-", " ")
-        strTotalInput2 = strTotalInput2.replace("_", " ")
-        strTotalInput += strTotalInput2 
-        strTotalInput += strTotalInput.replace("-", "_")
-        strTotalInput += strTotalInput.replace("_", "-")
-        strTotalInput += strTotalInput.replace("-", "")
-        strTotalInput += strTotalInput.replace("_", "")
-    
-    strTotalInput2 = ""
-    if lArgs.co == True:
-        strTotalInput2 += strTotalInput
-    if lArgs.cl == True:
-        strTotalInput2 += strTotalInput.lower()
-    if lArgs.cu == True:
-        strTotalInput2 += strTotalInput.upper()
-    strTotalInput += strTotalInput2
-
-    strTotalInput3 = strTotalInput
-    for i in range(0, 9):
-        strTotalInput3 = strTotalInput3.replace(str(i),"")
-    strTotalInput += strTotalInput3
-
-    lInput = strTotalInput.split(" ")
-    dEndResult = {}
-    for sInput in lInput:
-        sInput = sInput.strip()
-
-        if len(sInput) >= int(lArgs.min) and len(sInput) > 1:
-            if lArgs.max and len(sInput) > int(lArgs.max):
-                continue
-
-            if lArgs.dui and ("_" in sInput or "-" in sInput):
-                continue
-            
-            # if first char is - or _ remove it:
-            if sInput[0] == "_":
-                sInput = sInput.replace("_", "", 1)
-            if sInput[0] == "-":
-                sInput = sInput.replace("-", "", 1)
-
-            # if last char is - or _ remove it:
-            if sInput[len(sInput)-1] == "_":
-                sInput = sInput[:len(sInput)-1]
-                
-            # if a string only consists of dashes and underscores, the result will be an empty string and breaks...
-            if len(sInput) == 0:
-                continue
-            
-            if sInput[len(sInput)-1] == "-":
-                sInput = sInput[:len(sInput)-1]
-
-            if lArgs.ni == False and lArgs.nh == False:
-                dEndResult[sInput] = sInput
-
-            if lArgs.ni == True and not sInput.isdigit():
-                dEndResult[sInput] = sInput
-                
-            if int(lArgs.nh) > 0 and not HasHex(sInput):
-                dEndResult[sInput] = sInput
-
-    for result in sorted(dEndResult):
-        print(result)        
-
-def HasHex(strInput):
-    regex = r"^.*[a-f0-9_\-]{" + lArgs.nh + ",}$"
-    matches = re.match(regex, strInput, re.IGNORECASE)
-    if matches:
-        return True
-
 def Urls(strInput):
-    regex = r"([a-zA-Z][a-zA-Z0-9+-.]*\:\/\/)([a-zA-Z0-9\.\&\/\?\:@\+\-_=#%;,])*"
+    regex = r"([a-z0-9+-.]*\:\/\/)([a-z0-9\.\&\/\?\:@\+\-_=#%;,])*"
     matches = re.finditer(regex, strInput, re.IGNORECASE)
     lMatches = []
     for matchNum, match in enumerate(matches, start=1):
@@ -182,7 +93,7 @@ def Urls(strInput):
     return lMatches
 
 def RelUrls(strInput):
-    regex = r"(?:url\(|<(?:applet|area|audio|base|blockquote|body|button|command|del|embed|form|frame|head|html|iframe|img|image|ins|link|object|script|q|source|track|video)[^>]+(?:[<\s]action|background|cite|classid|codebase|data|formaction|href|icon|longdesc|manifest|poster|profile|src|usemap)\s*=\s*)(?!['\"]?(?:data|([a-zA-Z][a-zA-Z0-9+-.]*\:\/\/)))['\"]?([^'\"\)\s>]+)"
+    regex = r"(?:url\(|<(?:a|applet|area|audio|base|blockquote|body|button|command|del|embed|form|frame|head|html|iframe|img|image|ins|link|object|script|q|source|track|video)[^>]+(?:[<\s]action|background|cite|classid|codebase|data|formaction|href|icon|longdesc|manifest|poster|profile|src|usemap)\s*=\s*)(?!['\"]?(?:data|([a-zA-Z][a-zA-Z0-9+-.]*\:\/\/)))['\"]?([^'\"\)\s>]+)"
     matches = re.finditer(regex, strInput, re.IGNORECASE)
     lMatches = []
     for matchNum, match in enumerate(matches, start=1):
@@ -211,42 +122,171 @@ def GetLinks(strTotalInput):
     lRelUrlsQuoted = RelUrlsQuoted(strTotalInput)
     lTotal = lUrls + lRelUrls + lRelUrlsQuoted
     return " ".join(lTotal)
+
+def FilterIh(lWords):
+    lTemp = []
+    if lArgs.ih:
+        for word in lWords:
+            regex = r"[a-f0-9]{" + lArgs.ih + ",}"
+            matches = re.match(regex, word, re.IGNORECASE)
+            if not matches:
+                lTemp.append(word)
+        return lTemp
+    else:
+        return lWords
+
+def FilterMin(lWords):
+    lTemp = []
+    for word in lWords:
+        if len(word)>= int(lArgs.min):
+            lTemp.append(word)
+    return lTemp
+
+def FilterMax(lWords):
+    lTemp = []
+    for word in lWords:
+        if len(word)<= int(lArgs.max):
+            lTemp.append(word)
+    return lTemp
+
+def FilterIi(lWords):
+    lTemp = []
+    for word in lWords:
+        if not word.isdigit():
+            lTemp.append(word)
+    return lTemp
+
+def RegStringsWithDashAndUnderscore(strInput):
+    regex = r"([a-z0-9\-\_]+)"
+    matches = re.finditer(regex, strInput, re.IGNORECASE)
+    lMatches = []
+    for matchNum, match in enumerate(matches, start=1):
+        lMatches.append( "{match}".format(matchNum = matchNum, start = match.start(), end = match.end(), match = match.group()))
+    return lMatches
     
+def RegStringsWithoutDashAndUnderscore(strInput):
+    regex = r"([a-z0-9]+)"
+    matches = re.finditer(regex, strInput, re.IGNORECASE)
+    lMatches = []
+    for matchNum, match in enumerate(matches, start=1):
+        lMatches.append( "{match}".format(matchNum = matchNum, start = match.start(), end = match.end(), match = match.group()))
+    return lMatches
+
+def Strings(strInput):
+    lMatches = RegStringsWithDashAndUnderscore(StripAccents(strInput)) + RegStringsWithoutDashAndUnderscore(StripAccents(strInput))
+    lMatches = list(dict.fromkeys(lMatches))
+    return lMatches
+
+def ToPlainText(lWords):
+    lTemp = []
+    for word in lWords:
+        word = urllib.parse.unquote(word)
+        word = urllib.parse.unquote(word)
+        word = Unescape(word)
+        word = StripAccents(word)
+        lTemp.append(word)
+    return lTemp
+
+def ReplaceInsideWords(lWords):
+    lTemp = []
+    for word in lWords:
+        if len(word)>0:
+            word2 = word.rstrip('0123456789').lstrip('0123456789')
+            if word2 != word:
+                lTemp.append(word2)
+
+            lTemp.append(word)
+            word2 = word.replace("-", "_")
+            if word2 != word:
+                lTemp.append(word2)
+            word2 = word.replace("_", "-")
+            if word2 != word:
+                lTemp.append(word2)
+            if not lArgs.idu:
+                word2 = word.replace("-", "")
+                if word2 != word:
+                    lTemp.append(word2)
+                word2 = word.replace("_", "")
+                if word2 != word:
+                    lTemp.append(word2)
+    return lTemp
+
+def StripStripes(lWords):
+    lTemp = []
+    for word in lWords:
+        if len(word)>0:
+            if lArgs.idu:
+                if "_" not in word and "-" not in word:
+                    lTemp.append(word)
+            else:
+                if word[0] != "_" and word[0] != "-" and word[len(word)-1] != "_" and word[len(word)-1] != "-":
+                    lTemp.append(word)
+    return lTemp
+
 lArgs = GetArguments()
 requests.packages.urllib3.disable_warnings() 
 
 def main():
-
-    #if not lArgs.text and not lArgs.links:
-    #    lArgs.text = True
-    #    lArgs.links = True
-        
-    if not lArgs.cu and not lArgs.co and not lArgs.cl:
-        lArgs.cl = True
-
+    if lArgs.case:
+        lCaseArgs = lArgs.case.split(",")
+    else:
+        lCaseArgs = ["l"]
+    
+    if lArgs.type:
+        lTypeArgs = lArgs.type
+    else:
+        lTypeArgs = "full"
+    
     strTotalInput = ""
-
-    try:    # if binary values are given
+        
+    try:    # skip if binary values are given
         for strInput in sys.stdin:
             strTotalInput += strInput + "\n"
     except UnicodeError:
         pass
-    
-    if lArgs.text:
-        strTotalInput = GetWords(strTotalInput)
-        TextTransform(strTotalInput)
-        
-    if lArgs.links:
-        strTotalInput = GetLinks(strTotalInput)
-        TextTransform(strTotalInput)
 
-    if lArgs.quoted:
-        strTotalInput = GetQuotedStrings(strTotalInput)
-        TextTransform(strTotalInput)
+    if lTypeArgs == "full":
+        lMatches = Strings(strTotalInput)
+    elif lTypeArgs == "text":
+        strTotalInput = GetHtmlWords(strTotalInput)
+        lMatches = Strings(strTotalInput)
+    elif lTypeArgs == "links":
+        strTotalInput = GetLinks(strTotalInput)
+        lMatches = Strings(strTotalInput)
+    elif lTypeArgs == "quoted":
+        strTotalInput  = GetQuotedStrings(strTotalInput)
+        lMatches = Strings(strTotalInput)
         
-    if lArgs.full:
-        TextTransform(strTotalInput)
-        
+    z = ToPlainText(lMatches)
+    z = ReplaceInsideWords(z)
+    z = StripStripes(z)
+    if lArgs.ii:
+        z = FilterIi(z)
+
+    if lArgs.min:
+        z = FilterMin(z)
+
+    if lArgs.max:
+        z = FilterMax(z)
+
+    if lArgs.ih:
+        z = FilterIh(z)
+
+    lResult = []
     
+    if "l" in lCaseArgs:
+        lResult += [x.lower() for x in z]
+
+    if "u" in lCaseArgs:
+        lResult += [x.upper() for x in z]
+
+    if "o" in lCaseArgs:
+        lResult += z
+
+    lResult = list(dict.fromkeys(lResult))
+
+    for x in sorted(lResult):
+        print(x)
+        
 if __name__ == '__main__':
-    main()
+    main()  
