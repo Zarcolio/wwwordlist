@@ -13,65 +13,63 @@ If you're running into trouble running wwwordlist, please drop me an issue and I
 
 # Usage
 ```
-usage: wwwordlist [-h] [-text] [-links] [-quoted] [-full] [--co] [--cl] [--cu] [--nh <length>] [--ni]
-                  [--dui] [--min <length>] [--max <length>]                                     
-                                                                                                   
-Use wwwordlist to generate a wordlist from either text or the links in HTML.                         
+usage: wwwordlist [-h] [-type <text|urls|quoted|full>] [--case <o|l|u>] [--ih <length>] [--ii] [--idu]          
+                  [--min <length>] [--max <length>]                                                             
+
+Use wwwordlist to generate a wordlist from either text or the links in HTML.
 
 optional arguments:
-  -h, --help      show this help message and exit
-  -text           Analyze the text between HTML tags.
-  -links          Analyze the links inside the provide text.
-  -quoted         Analyze text inside quotes.
-  -full           Analyze the full text (can be HTML, JS, CSS or whatever).
-  --co            Leave original case. If no case type is specified, -cl is the default. If another case is
-                  specified, -cl has to be specified to be included.
-  --cl            Apply lower case.
-  --cu            Apply upper case.
-  --nh <length>   Ignore values containing a valid hexadecimal number of this length.
-  --ni            Ignore values that are a valid integer number.
-  --dui           Ignore values containing a dash or underscore.
-  --min <length>  Defines the minimum length of a word to add to the wordlist, defaults to 3.
-  --max <length>  Defines the maximum length of a word to add to the wordlist.
+  -h, --help            show this help message and exit
+  -type <text|urls|quoted|full>
+                        Analyze the text between HTML tags, inside urls found, inside quoted text or in the
+                        full text.
+  --case <o|l|u>        Apply original, lower or upper case. If no case type is specified, lower case is the
+                        default. If another case is specified, lower has to be specified to be included.
+                        Spearate by comma's
+  --ih <length>         Ignore values containing a valid hexadecimal number of this length.
+  --ii                  Ignore words that are a valid integer number.
+  --idu                 Ignore words containing a dash or underscore, but break them in parts.
+  --min <length>        Defines the minimum length of a word to add to the wordlist, defaults to 3.
+  --max <length>        Defines the maximum length of a word to add to the wordlist.
 ```
 
 # Examples
 If you want to build a wordlist based on the text between the HTML tags, simply run:
 ```
-cat index.html|wwwordlist -text
+cat index.html|wwwordlist -type text
 ```
 If you want to build a wordlist based on links inside a file, simply run:
 ```
-cat index.html|wwwordlist -links
+cat index.html|wwwordlist -type urls
 ```
 If you want to build a wordlist based on the text between the HTML tags, simply run:
 ```
-cat index.html|wwwordlist -text
+cat index.html|wwwordlist -type text
 ```
 If you want to build a wordlist based on the text between the HTML tags, but you want it to be quite small, simply run:
 ```
-cat index.html|wwwordlist -text --nh 4 --dui --max 8
+cat index.html|wwwordlist -type text --nh 4 --dui --max 8
 ```
 If you want to build a wordlist based on the text between the HTML tags, but you want it to be really big, simply run:
 ```
-cat index.html|wwwordlist -text --nh 4 --co --cl --cu --min 1
+cat index.html|wwwordlist -type text --ih 4 --case o,l,u
 ```
 If you want to build a wordlist based on the text from a webpage, simply run:
 ```
-wget -qO - example.com|wwwordlist -text
+wget -qO - example.com|wwwordlist -type text
 ```
 If you want to build a big wordlist based on whole website and run it through ffuf, try:
 ```
 wget -nd -r example.com -q -E  -R woff,jpg,gif,eot,ttf,svg,png,otf,pdf,exe,zip,rar,tgz,docx,ico,jpeg
-cat *.*|wwwordlist --nh 4 --cl --co  --max 10 -full|ffuf -recursion -w - -u https://example.com/FUZZ -r
+cat *.*|wwwordlist --ih 4 --case o,l,u --max 10 -full|ffuf -recursion -w - -u https://example.com/FUZZ -r
 ```
-Want to throw [waybackurls](https://github.com/tomnomnom/waybackurls) in the mix? Use:
+Want to throw [waybackurls](https://github.com/tomnomnom/waybackurls) in the mix? Use (warning: this will take a lot of time):
 ```
-cat domains.txt | waybackurls | xargs -n1 wget -qO - | wwwordlist -full
+cat domains.txt | waybackurls | xargs -n1 wget -T 2 -qO - | wwwordlist --min 3 --max 10 --ih 3
 ```
 Got a Git repo cloned locally? Try the following command inside the clone folder:
 ```
-find . -type f -exec strings  {} +|wwwordlist -full
+find . -type f -exec strings  {} +|wwwordlist
 ```
 
 # Contribute?
