@@ -30,7 +30,7 @@ optional arguments:
   --ii                  Ignore words that are a valid integer number.
   --idu                 Ignore words containing a dash or underscore, but break them in parts.
   --min <length>        Defines the minimum length of a word to add to the wordlist, defaults to 3.
-  --max <length>        Defines the maximum length of a word to add to the wordlist.
+  --max <length>        Defines the maximum length of a word to add to the wordlist, defaults to 10.
 ```
 
 # Examples
