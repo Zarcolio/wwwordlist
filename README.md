@@ -63,9 +63,9 @@ If you want to build a big wordlist based on whole website and run it through ff
 wget -nd -r example.com -q -E  -R woff,jpg,gif,eot,ttf,svg,png,otf,pdf,exe,zip,rar,tgz,docx,ico,jpeg
 cat *.*|wwwordlist --ih 4 --case o,l,u --max 10 -full|ffuf -recursion -w - -u https://example.com/FUZZ -r
 ```
-Want to throw [waybackurls](https://github.com/tomnomnom/waybackurls) in the mix? Use (warning: this will take a lot of time):
+Want to throw [waybackurls](https://github.com/tomnomnom/waybackurls) in the mix? Use (warning: this will take a lot of time)([urlcoding](https://github.com/Zarcolio/urlcoding)):
 ```
-cat domains.txt | waybackurls | xargs -n1 wget -T 2 -qO - | wwwordlist --ih 4
+cat domains.txt | waybackurls | urlcoding -e | xargs -n1 wget -T 2 -qO - | wwwordlist --ih 4
 ```
 Got a Git repo cloned locally? Try the following command inside the clone folder:
 ```
