@@ -48,7 +48,7 @@ cat index.html|wwwordlist -type text
 ```
 If you want to build a wordlist based on the text between the HTML tags, but you want it to be quite small, simply run:
 ```
-cat index.html|wwwordlist -type text --nh 4 --dui --max 8
+cat index.html|wwwordlist -type text --ih 4 --dui --max 8
 ```
 If you want to build a wordlist based on the text between the HTML tags, but you want it to be really big, simply run:
 ```
@@ -65,7 +65,7 @@ cat *.*|wwwordlist --ih 4 --case o,l,u --max 10 -full|ffuf -recursion -w - -u ht
 ```
 Want to throw [waybackurls](https://github.com/tomnomnom/waybackurls) in the mix? Use (warning: this will take a lot of time):
 ```
-cat domains.txt | waybackurls | xargs -n1 wget -T 2 -qO - | wwwordlist --min 3 --max 10 --ih 3
+cat domains.txt | waybackurls | xargs -n1 wget -T 2 -qO - | wwwordlist --ih 4
 ```
 Got a Git repo cloned locally? Try the following command inside the clone folder:
 ```
