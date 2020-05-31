@@ -226,6 +226,19 @@ def StripStripes(lWords):
 lArgs = GetArguments()
 requests.packages.urllib3.disable_warnings() 
 
+def PluralToSingle(lWords):
+    lTemp = []
+    for word in lWords:
+        lTemp.append(word)
+        if word.endswith("ies", len(word)-4):
+            word = re.sub('ies$', 'y', word)
+            lTemp.append(word)
+        else:
+            word = re.sub('s$', '', word)
+            lTemp.append(word)
+
+    return lTemp
+    
 def main():
     if lArgs.case:
         lCaseArgs = lArgs.case.split(",")
@@ -264,6 +277,7 @@ def main():
     z = ToPlainText(lMatches)
     z = ReplaceInsideWords(z)
     z = StripStripes(z)
+    z = PluralToSingle(z)
     if lArgs.ii:
         z = FilterIi(z)
 
