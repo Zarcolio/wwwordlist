@@ -65,7 +65,7 @@ cat *.*|wwwordlist --ih 4 --case o,l,u --max 10 -full|ffuf -recursion -w - -u ht
 ```
 Want to throw [waybackurls](https://github.com/tomnomnom/waybackurls) in the mix? Use it together with xargs together and [urlcoding](https://github.com/Zarcolio/urlcoding) (warning: this will take a lot of time):
 ```
-cat domains.txt | waybackurls | urlcoding -e | xargs -n1 wget -T 2 -qO - | wwwordlist --ih 4
+cat domains.txt | waybackurls | urlcoding -e | parallel --pipe xargs -n1 wget -T 2 -qO - | wwwordlist --ih 4
 ```
 Got a Git repo cloned locally? Try the following command inside the clone folder:
 ```
