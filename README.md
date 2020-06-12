@@ -42,10 +42,6 @@ If you want to build a wordlist based on links inside a file, simply run:
 ```
 cat index.html|wwwordlist -type urls
 ```
-If you want to build a wordlist based on the text between the HTML tags, simply run:
-```
-cat index.html|wwwordlist -type text
-```
 If you want to build a wordlist based on the text between the HTML tags, but you want it to be quite small, simply run:
 ```
 cat index.html|wwwordlist -type text --ih 4 --dui --max 8
