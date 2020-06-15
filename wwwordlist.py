@@ -14,7 +14,7 @@ import unicodedata
 def GetArguments():
     # Get some commandline arguments:
     argParser=argparse.ArgumentParser(description='Use wwwordlist to generate a wordlist from input.')
-    argParser.add_argument('-type', metavar="<type>", help='Analyze the text between HTML tags, inside urls found, inside quoted text or in the full text. Choose between jsvars|httpvars|text|urls|quoted|full Defaults to \'full\'.')
+    argParser.add_argument('-type', metavar="<type>", help='Analyze the text between HTML tags, inside urls found, inside quoted text or in the full text. Choose between httpvars|inputvars|jsvars|text|urls|quoted|full Defaults to \'full\'.')
     argParser.add_argument('--case', metavar="<o|l|u>", help='Apply original, lower or upper case. If no case type is specified, lower case is the default. If another case is specified, lower has to be specified to be included. Spearate by comma\'s')
     argParser.add_argument('--iwh', metavar="<length>", help='Ignore values containing a valid hexadecimal number of this length. Don\'t low values as letters a-f will be filtered.', default=False)
     argParser.add_argument('--iwn', metavar="<length>", help='Ignore values containing a valid decimal number of this length.', default=False)
@@ -87,6 +87,14 @@ def GetHtmlWords(sHtml):
 
 def GetVarsJs (strInput):
     regex = r"(var\s+)([a-z0-9]+)(\s*=)"
+    matches = re.finditer(regex, strInput, re.IGNORECASE)
+    lMatches = []
+    for matchNum, match in enumerate(matches, start=1):
+        lMatches.append(match.group(2))
+    return lMatches
+
+def GetVarsInput (strInput):
+    regex = r"(\<input.*?name=[\"']{0,1})([a-z][a-z0-9]*)"
     matches = re.finditer(regex, strInput, re.IGNORECASE)
     lMatches = []
     for matchNum, match in enumerate(matches, start=1):
@@ -295,6 +303,8 @@ def main():
         lMatches = GetVarsJs(strTotalInput)
     elif lTypeArgs == "httpvars":
         lMatches = GetVarsHttp(strTotalInput)
+    elif lTypeArgs == "inputvars":
+        lMatches = GetVarsInput(strTotalInput)
     elif lTypeArgs == "text":
         strTotalInput = GetHtmlWords(strTotalInput)
         lMatches = Strings(strTotalInput)
