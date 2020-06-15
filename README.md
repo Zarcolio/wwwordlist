@@ -23,8 +23,8 @@ optional arguments:
   -type <type>    Analyze the text between HTML tags, inside urls found, inside quoted text or in the full
                   text. Choose between httpvars|inputvars|jsvars|text|urls|quoted|full Defaults to 'full'.
   --case <o|l|u>  Apply original, lower or upper case. If no case type is specified, lower case is the
-                  default. If another case is specified, lower has to be specified to be included. Spearate by
-                   comma's.
+                  default. If another case is specified, lower has to be specified to be included. Spearate
+                  by comma's.
   --iwh <length>  Ignore values containing a valid hexadecimal number of this length. Don't low values as 
                   letters a-f will be filtered.
   --iwn <length>  Ignore values containing a valid decimal number of this length.
