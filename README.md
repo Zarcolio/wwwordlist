@@ -13,24 +13,20 @@ If you're running into trouble running wwwordlist, please drop me an issue and I
 
 # Usage
 ```
-usage: wwwordlist [-h] [-type <text|urls|quoted|full>] [--case <o|l|u>] [--ih <length>] [--ii] [--idu]          
-                  [--min <length>] [--max <length>]                                                             
+usage: wwwordlist [-h] [-type <type>] [--case <o|l|u>] [--iwh <length>] [--iwn <length>] [--ii] [--idu] [--min <length>] [--max <length>]
 
-Use wwwordlist to generate a wordlist from either text or the links in HTML.
+Use wwwordlist to generate a wordlist from input.
 
 optional arguments:
-  -h, --help            show this help message and exit
-  -type <text|urls|quoted|full>
-                        Analyze the text between HTML tags, inside urls found, inside quoted text or in the
-                        full text. Defaults to 'full'.
-  --case <o|l|u>        Apply original, lower or upper case. If no case type is specified, lower case is
-                        the default. If another case is specified, lower has to be specified to be included.
-                        Spearate by comma's
-  --ih <length>         Ignore values containing a valid hexadecimal number of this length.
-  --ii                  Ignore words that are a valid integer number.
-  --idu                 Ignore words containing a dash or underscore, but break them in parts.
-  --min <length>        Defines the minimum length of a word to add to the wordlist, defaults to 3.
-  --max <length>        Defines the maximum length of a word to add to the wordlist, defaults to 10.
+  -h, --help      show this help message and exit
+  -type <type>    Analyze the text between HTML tags, inside urls found, inside quoted text or in the full text. Choose between httpvars|inputvars|jsvars|text|urls|quoted|full Defaults to 'full'.
+  --case <o|l|u>  Apply original, lower or upper case. If no case type is specified, lower case is the default. If another case is specified, lower has to be specified to be included. Spearate by comma's
+  --iwh <length>  Ignore values containing a valid hexadecimal number of this length. Don't low values as letters a-f will be filtered.
+  --iwn <length>  Ignore values containing a valid decimal number of this length.
+  --ii            Ignore words that are a valid integer number.
+  --idu           Ignore words containing a dash or underscore, but break them in parts.
+  --min <length>  Defines the minimum length of a word to add to the wordlist, defaults to 3.
+  --max <length>  Defines the maximum length of a word to add to the wordlist, defaults to 10
 ```
 
 # Examples
