@@ -13,10 +13,11 @@ import unicodedata
 
 def GetArguments():
     # Get some commandline arguments:
-    argParser=argparse.ArgumentParser(description='Use wwwordlist to generate a wordlist from either text or the links in HTML.')
-    argParser.add_argument('-type', metavar="<text|urls|quoted|full>", help='Analyze the text between HTML tags, inside urls found, inside quoted text or in the full text. Defaults to \'full\'.')
+    argParser=argparse.ArgumentParser(description='Use wwwordlist to generate a wordlist from input.')
+    argParser.add_argument('-type', metavar="<type>", help='Analyze the text between HTML tags, inside urls found, inside quoted text or in the full text. Choose between jsvars|httpvars|text|urls|quoted|full Defaults to \'full\'.')
     argParser.add_argument('--case', metavar="<o|l|u>", help='Apply original, lower or upper case. If no case type is specified, lower case is the default. If another case is specified, lower has to be specified to be included. Spearate by comma\'s')
-    argParser.add_argument('--ih', metavar="<length>", help='Ignore values containing a valid hexadecimal number of this length.', default=False)
+    argParser.add_argument('--iwh', metavar="<length>", help='Ignore values containing a valid hexadecimal number of this length. Don\'t low values as letters a-f will be filtered.', default=False)
+    argParser.add_argument('--iwn', metavar="<length>", help='Ignore values containing a valid decimal number of this length.', default=False)
     argParser.add_argument('--ii', help='Ignore words that are a valid integer number.', action="store_true", default=False)
     argParser.add_argument('--idu', help='Ignore words containing a dash or underscore, but break them in parts.', action="store_true", default=False)
     argParser.add_argument('--min', metavar="<length>", help='Defines the minimum length of a word to add to the wordlist, defaults to 3.', default=3)
@@ -84,6 +85,22 @@ def GetHtmlWords(sHtml):
     sText = '\n'.join(chunk for chunk in chunks if chunk)
     return sText
 
+def GetVarsJs (strInput):
+    regex = r"(var\s+)([a-z0-9]+)(\s*=)"
+    matches = re.finditer(regex, strInput, re.IGNORECASE)
+    lMatches = []
+    for matchNum, match in enumerate(matches, start=1):
+        lMatches.append(match.group(2))
+    return lMatches
+
+def GetVarsHttp (strInput):
+    regex = r"(([\?\&])([a-z][a-z0-9]*)(=))"
+    matches = re.finditer(regex, strInput, re.IGNORECASE)
+    lMatches = []
+    for matchNum, match in enumerate(matches, start=1):
+        lMatches.append(match.group(3))
+    return lMatches
+
 def Urls(strInput):
     regex = r"([a-z0-9+-.]*\:\/\/)([a-z0-9\.\&\/\?\:@\+\-_=#%;,])*"
     matches = re.finditer(regex, strInput, re.IGNORECASE)
@@ -125,11 +142,24 @@ def GetLinks(strTotalInput):
 
 def FilterIh(lWords):
     lTemp = []
-    if lArgs.ih:
+    if lArgs.iwh:
         for word in lWords:
-            regex = r"[a-f0-9]{" + lArgs.ih + ",}"
-            matches = re.match(regex, word, re.IGNORECASE)
+            regex = r"[a-f0-9]{" + lArgs.iwh + ",}"
+            if not re.match(regex, word):
+                lTemp.append(word)
+        return lTemp
+    else:
+        return lWords
+
+def FilterIn(lWords):
+    lTemp = []
+    if lArgs.iwn:
+        for word in lWords:
+            regex = r"[a-f0-9]{" + lArgs.iwn + ",}"
+            matches = re.finditer(regex, word)
+            print(matches)
             if not matches:
+                print(regex+">"+word)
                 lTemp.append(word)
         return lTemp
     else:
@@ -177,15 +207,12 @@ def Strings(strInput):
     lMatches = list(dict.fromkeys(lMatches))
     return lMatches
 
-def ToPlainText(lWords):
-    lTemp = []
-    for word in lWords:
-        word = urllib.parse.unquote(word)
-        word = urllib.parse.unquote(word)
-        word = Unescape(word)
-        word = StripAccents(word)
-        lTemp.append(word)
-    return lTemp
+def ToPlainText(strInput):
+    strInput = urllib.parse.unquote(strInput)
+    strInput = urllib.parse.unquote(strInput)
+    strInput = Unescape(strInput)
+    strInput = StripAccents(strInput)
+    return strInput
 
 def ReplaceInsideWords(lWords):
     lTemp = []
@@ -233,6 +260,8 @@ def PluralToSingle(lWords):
         if word.endswith("ies", len(word)-4):
             word = re.sub('ies$', 'y', word)
             lTemp.append(word)
+        elif word.endswith("ss", len(word)-3):
+            continue
         else:
             word = re.sub('s$', '', word)
             lTemp.append(word)
@@ -258,8 +287,14 @@ def main():
     except UnicodeError:
         pass
 
+    strTotalInput = ToPlainText(strTotalInput)
+
     if lTypeArgs == "full":
         lMatches = Strings(strTotalInput)
+    elif lTypeArgs == "jsvars":
+        lMatches = GetVarsJs(strTotalInput)
+    elif lTypeArgs == "httpvars":
+        lMatches = GetVarsHttp(strTotalInput)
     elif lTypeArgs == "text":
         strTotalInput = GetHtmlWords(strTotalInput)
         lMatches = Strings(strTotalInput)
@@ -272,10 +307,8 @@ def main():
     else:
         sys.stderr.write("Invalid type.\n\n")
         sys.exit(2)
-        
-        
-    z = ToPlainText(lMatches)
-    z = ReplaceInsideWords(z)
+                
+    z = ReplaceInsideWords(lMatches)
     z = StripStripes(z)
     z = PluralToSingle(z)
     if lArgs.ii:
@@ -287,8 +320,11 @@ def main():
     if lArgs.max:
         z = FilterMax(z)
 
-    if lArgs.ih:
+    if lArgs.iwh:
         z = FilterIh(z)
+
+    if lArgs.iwn:
+        z = FilterIn(z)
 
     lResult = []
     
