@@ -21,7 +21,7 @@ Use wwwordlist to generate a wordlist from input.
 optional arguments:
   -h, --help      show this help message and exit
   -type <type>    Analyze the text between HTML tags, inside urls found, inside quoted text or in the full
-                  text. Choose between httpvars|inputvars|jsvars|text|urls|quoted|full Defaults to 'full'.
+                  text. Choose between httpvars|inputvars|jsvars|text|urls|quoted|full. Defaults to 'full'.
   --case <o|l|u>  Apply original, lower or upper case. If no case type is specified, lower case is the
                   default. If another case is specified, lower has to be specified to be included. Spearate
                   by comma's.
