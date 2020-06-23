@@ -1,5 +1,5 @@
 # About wwwordlist
-wwwordlist takes input from stdin and extracts words from either text in HTML (extracted with BS4) or links found in the supplied text.
+wwwordlist takes input from stdin and extracts words from text in HTML (extracted with BS4), URLs, JS/HTTP/input variables, quoted texts found in the supplied text and mail files.
 
 # Why use wwwordlist?
 Because [Stök](https://twitter.com/stokfredrik) says you should use good wordlists, based on the content of the target. This is my attempt on creating a tool that supports this.
