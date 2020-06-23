@@ -16,7 +16,7 @@ import email
 def GetArguments():
     # Get some commandline arguments:
     argParser=argparse.ArgumentParser(description='Use wwwordlist to generate a wordlist from input.')
-    argParser.add_argument('-type', metavar="<type>", help='Analyze the text between HTML tags, inside urls found, inside quoted text or in the full text. Choose between httpvars|inputvars|jsvars|text|urls|quoted|full. Defaults to \'full\'.')
+    argParser.add_argument('-type', metavar="<type>", help='Analyze the text between HTML tags, inside urls found, inside quoted text or in the full text. Choose between httpvars|inputvars|jsvars|html|urls|quoted|full. Defaults to \'full\'.')
     argParser.add_argument('--case', metavar="<o|l|u>", help='Apply original, lower or upper case. If no case type is specified, lower case is the default. If another case is specified, lower has to be specified to be included. Spearate by comma\'s')
     argParser.add_argument('--iwh', metavar="<length>", help='Ignore values containing a valid hexadecimal number of this length. Don\'t low values as letters a-f will be filtered.', default=False)
     argParser.add_argument('--iwn', metavar="<length>", help='Ignore values containing a valid decimal number of this length.', default=False)
@@ -318,7 +318,7 @@ def main():
         lMatches = GetVarsHttp(strTotalInput)
     elif lTypeArgs == "inputvars":
         lMatches = GetVarsInput(strTotalInput)
-    elif lTypeArgs == "text":
+    elif lTypeArgs == "html":
         strTotalInput = GetHtmlWords(strTotalInput)
         lMatches = Strings(strTotalInput)
     elif lTypeArgs == "urls":
