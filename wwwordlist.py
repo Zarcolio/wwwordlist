@@ -24,7 +24,7 @@ def GetArguments():
     argParser.add_argument('--idu', help='Ignore words containing a dash or underscore, but break them in parts.', action="store_true", default=False)
     argParser.add_argument('--min', metavar="<length>", help='Defines the minimum length of a word to add to the wordlist, defaults to 3.', default=3)
     argParser.add_argument('--max', metavar="<length>", help='Defines the maximum length of a word to add to the wordlist, defaults to 10', default=10)
-    argParser.add_argument('--qpdecode', help='Quoted-printable decode input first. Use this option when inputting a email body.', action="store_true")
+    argParser.add_argument('--mailfile', help='Quoted-printable decode input first. Use this option when inputting a email body.', action="store_true")
 
     return argParser.parse_args()
 
@@ -299,7 +299,7 @@ def main():
     except UnicodeError:
         pass
 
-    if lArgs.qpdecode:
+    if lArgs.mailfile:
         strTotalInput = quopri.decodestring(strTotalInput).decode('utf-8', errors='ignore')
         b = email.message_from_string(strTotalInput)
         if b.is_multipart():
