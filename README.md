@@ -39,7 +39,7 @@ optional arguments:
 # Examples
 If you want to build a wordlist based on the text between the HTML tags, simply run:
 ```
-cat index.html|wwwordlist -type text
+cat index.html|wwwordlist -type html
 ```
 If you want to build a wordlist based on links inside a file, simply run:
 ```
@@ -47,15 +47,15 @@ cat index.html|wwwordlist -type urls
 ```
 If you want to build a wordlist based on the text between the HTML tags, but you want it to be quite small, simply run:
 ```
-cat index.html|wwwordlist -type text --ih 4 --dui --max 8
+cat index.html|wwwordlist -type html --ih 4 --dui --max 8
 ```
 If you want to build a wordlist based on the text between the HTML tags, but you want it to be really big, simply run:
 ```
-cat index.html|wwwordlist -type text --ih 4 --case o,l,u
+cat index.html|wwwordlist -type html --ih 4 --case o,l,u
 ```
 If you want to build a wordlist based on the text from a webpage, simply run:
 ```
-wget -qO - example.com|wwwordlist -type text
+wget -qO - example.com|wwwordlist -type html
 ```
 If you want to build a big wordlist based on whole website and run it through ffuf, try:
 ```
