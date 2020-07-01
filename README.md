@@ -15,6 +15,7 @@ If you're running into trouble running wwwordlist, please drop me an issue and I
 ```
 usage: wwwordlist [-h] [-type <type>] [--case <o|l|u>] [--iwh <length>] [--iwn <length>] [--ii] 
 [--idu] [--min <length>] [--max <length>]
+```
 
 Use wwwordlist to generate a wordlist from input.
 # About wwwordlist
