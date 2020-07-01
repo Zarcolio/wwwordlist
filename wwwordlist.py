@@ -18,7 +18,7 @@ def GetArguments():
     argParser=argparse.ArgumentParser(description='Use wwwordlist to generate a wordlist from input.')
     argParser.add_argument('-type', metavar="<type>", help='Analyze the text between HTML tags, inside urls found, inside quoted text or in the full text. Choose between httpvars|inputvars|jsvars|html|urls|quoted|full. Defaults to \'full\'.')
     argParser.add_argument('-case', metavar="<o|l|u>", help='Apply original, lower or upper case. If no case type is specified, lower case is the default. If another case is specified, lower has to be specified to be included. Spearate by comma\'s')
-    argParser.add_argument('-excl', metavar="<file>", help='Compare the gathered words against a file with words and leave out the words found in both. Can be used together with a file with forbidden words or perhaps compare input against a non related social media post so you won\'t get any unnecassary words that are used in the social media website itself.')
+    argParser.add_argument('-excl', metavar="<file>", help='Compare the gathered words against a file with words and leave out the words found in both. Can be used together with a file with forbidden words.')
     argParser.add_argument('-iwh', metavar="<length>", help='Ignore values containing a valid hexadecimal number of this length. Don\'t low values as letters a-f will be filtered.', default=False)
     argParser.add_argument('-iwn', metavar="<length>", help='Ignore values containing a valid decimal number of this length.', default=False)
     argParser.add_argument('-ii', help='Ignore words that are a valid integer number.', action="store_true", default=False)
