@@ -58,7 +58,7 @@ def StripAccents(text):
     text = text.decode("utf-8")
     return str(text)
 
-ESCAPE_SEQUENCE_RE = re.exclile(r'''
+ESCAPE_SEQUENCE_RE = re.compile(r'''
     ( \\U........      # 8-digit hex escapes
     | \\u....          # 4-digit hex escapes
     | \\x..            # 2-digit hex escapes
