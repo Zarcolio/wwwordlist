@@ -17,16 +17,28 @@ def GetArguments():
     # Get some commandline arguments:
     argParser=argparse.ArgumentParser(description='Use wwwordlist to generate a wordlist from input.')
     argParser.add_argument('-type', metavar="<type>", help='Analyze the text between HTML tags, inside urls found, inside quoted text or in the full text. Choose between httpvars|inputvars|jsvars|html|urls|quoted|full. Defaults to \'full\'.')
-    argParser.add_argument('--case', metavar="<o|l|u>", help='Apply original, lower or upper case. If no case type is specified, lower case is the default. If another case is specified, lower has to be specified to be included. Spearate by comma\'s')
-    argParser.add_argument('--iwh', metavar="<length>", help='Ignore values containing a valid hexadecimal number of this length. Don\'t low values as letters a-f will be filtered.', default=False)
-    argParser.add_argument('--iwn', metavar="<length>", help='Ignore values containing a valid decimal number of this length.', default=False)
-    argParser.add_argument('--ii', help='Ignore words that are a valid integer number.', action="store_true", default=False)
-    argParser.add_argument('--idu', help='Ignore words containing a dash or underscore, but break them in parts.', action="store_true", default=False)
-    argParser.add_argument('--min', metavar="<length>", help='Defines the minimum length of a word to add to the wordlist, defaults to 3.', default=3)
-    argParser.add_argument('--max', metavar="<length>", help='Defines the maximum length of a word to add to the wordlist, defaults to 10', default=10)
-    argParser.add_argument('--mailfile', help='Quoted-printable decode input first. Use this option when inputting a email body.', action="store_true")
+    argParser.add_argument('-case', metavar="<o|l|u>", help='Apply original, lower or upper case. If no case type is specified, lower case is the default. If another case is specified, lower has to be specified to be included. Spearate by comma\'s')
+    argParser.add_argument('-excl', metavar="<file>", help='Compare the gathered words against a file with words and leave out the words found in both. Can be used together with a file with forbidden words or perhaps compare input against a non related social media post so you won\'t get any unnecassary words that are used in the social media website itself.')
+    argParser.add_argument('-iwh', metavar="<length>", help='Ignore values containing a valid hexadecimal number of this length. Don\'t low values as letters a-f will be filtered.', default=False)
+    argParser.add_argument('-iwn', metavar="<length>", help='Ignore values containing a valid decimal number of this length.', default=False)
+    argParser.add_argument('-ii', help='Ignore words that are a valid integer number.', action="store_true", default=False)
+    argParser.add_argument('-idu', help='Ignore words containing a dash or underscore, but break them in parts.', action="store_true", default=False)
+    argParser.add_argument('-min', metavar="<length>", help='Defines the minimum length of a word to add to the wordlist, defaults to 3.', default=3)
+    argParser.add_argument('-max', metavar="<length>", help='Defines the maximum length of a word to add to the wordlist, defaults to 10', default=10)
+    argParser.add_argument('-mailfile', help='Quoted-printable decode input first. Use this option when inputting a email body.', action="store_true")
 
     return argParser.parse_args()
+
+def GetCompFileContent(sCompFileName):
+    try:
+        f = open(sCompFileName, 'r')
+        lWords = f.read().splitlines()
+        lWords = list(filter(None, lWords))
+        f.close()
+    except FileNotFoundError:
+        print("File named " + sCompFileName + " was not found.")
+    
+    return lWords
 
 def SignalHandler(sig, frame):
     # Create a break routine:
@@ -46,7 +58,7 @@ def StripAccents(text):
     text = text.decode("utf-8")
     return str(text)
 
-ESCAPE_SEQUENCE_RE = re.compile(r'''
+ESCAPE_SEQUENCE_RE = re.exclile(r'''
     ( \\U........      # 8-digit hex escapes
     | \\u....          # 4-digit hex escapes
     | \\x..            # 2-digit hex escapes
@@ -281,6 +293,10 @@ def PluralToSingle(lWords):
     return lTemp
     
 def main():
+    
+    if lArgs.excl:
+        lCompWords = GetCompFileContent(lArgs.excl)
+            
     if lArgs.case:
         lCaseArgs = lArgs.case.split(",")
     else:
@@ -362,6 +378,9 @@ def main():
 
     lResult = list(dict.fromkeys(lResult))
 
+    if lArgs.excl:
+        lResult = set(lResult) - set(lCompWords)
+        
     for x in sorted(lResult):
         print(x)
         
