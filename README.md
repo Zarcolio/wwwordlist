@@ -46,9 +46,7 @@ optional arguments:
                   default. If another case is specified, lower has to be specified to be included.
                   Spearate by comma's.
   -excl <file>    Compare the gathered words against a file with words and leave out the words found in
-                  both. Can be used together with a file with forbidden words or perhaps compare input
-                  against a non-related social media post so you won't get any unnecassary words that are
-                  used in the social media website itself.
+                  both. Can be used together with a file with forbidden words.
   -iwh <length>   Ignore values containing a valid hexadecimal number of this length. Don't low values
                   as letters a-f will be filtered.
   -iwn <length>   Ignore values containing a valid decimal number of this length.
