@@ -2,6 +2,8 @@
 
 scriptname="wwwordlist.py"
 
+pip3 install -r requirements.txt
+
 dir=$(pwd)
 
 2ulb 2&>/dev/null
