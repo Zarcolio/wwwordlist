@@ -8,8 +8,8 @@ Because [Stök](https://twitter.com/stokfredrik) says you should use good wordli
 Wwwordlist should be able to run with a default Kali Linux installation with BS4 installed. To install BS4:
 ```
 git clone https://github.com/Zarcolio/wwwordlist
-pip3 install -r wwwordlist/requirements.txt
-bash wwwordlist/install.sh
+cd wwwordlist
+bash install.sh
 ```
 If you're running into trouble running wwwordlist, please drop me an issue and I'll try to fix it :)
 
