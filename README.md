@@ -75,4 +75,4 @@ find . -type f -exec strings  {} +|wwwordlist
 ```
 
 # Contribute?
-Do you have some usefull additions to the script, please send in a pull request to help make this script better :)
+Do you have some usefull additions to the script, please send in a pull request to help make this script better or contact me @ [Twitter](https://twitter.com/zarcolio) :)
