@@ -29,8 +29,8 @@ optional arguments:
                  default. If another case is specified, lower has to be specified to be included.
                  Spearate by comma's.
   -excl <file>   Leave out the words found in this file.
-  -iwh <length>  Ignore values containing a valid hexadecimal number of this length. Don't low values
-                 as letters a-f will be filtered.
+  -iwh <length>  Ignore values containing a valid hexadecimal number of this length. Don't use low 
+                 values as letters a-f will be filtered.
   -iwn <length>  Ignore values containing a valid decimal number of this length.
   -ii            Ignore words that are a valid integer number.
   -idu           Ignore words containing a dash or underscore, but break them in parts.
