@@ -1,6 +1,6 @@
-(https://github.com/Zarcolio/wwwordlist) ![](https://img.shields.io/github/license/Zarcolio/wwwordlist) ![](https://img.shields.io/github/stars/Zarcolio/wwwordlist) ![](https://img.shields.io/github/forks/Zarcolio/wwwordlist) ![](https://img.shields.io/github/issues/Zarcolio/wwwordlist) ![](https://img.shields.io/github/issues-closed-raw/Zarcolio/wwwordlist) ![](https://img.shields.io/github/issues-pr/Zarcolio/wwwordlist) ![](https://img.shields.io/github/issues-pr-closed-raw/Zarcolio/wwwordlist)
+![](https://img.shields.io/github/license/Zarcolio/wwwordlist) ![](https://img.shields.io/github/stars/Zarcolio/wwwordlist) ![](https://img.shields.io/github/forks/Zarcolio/wwwordlist) ![](https://img.shields.io/github/issues/Zarcolio/wwwordlist) ![](https://img.shields.io/github/issues-closed-raw/Zarcolio/wwwordlist) ![](https://img.shields.io/github/issues-pr/Zarcolio/wwwordlist) ![](https://img.shields.io/github/issues-pr-closed-raw/Zarcolio/wwwordlist)
 
-# About [WWWordList]
+# About [WWWordList](https://github.com/Zarcolio/wwwordlist)
 WWWordList takes input from stdin and extracts words based on HTML (extracted with BS4), URLs, JS/HTTP/input variables, quoted texts found in the supplied text and mail files.
 
 # Why use WWWordList?
