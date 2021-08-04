@@ -1,24 +1,24 @@
-# About wwwordlist
-wwwordlist takes input from stdin and extracts words based on HTML (extracted with BS4), URLs, JS/HTTP/input variables, quoted texts found in the supplied text and mail files.
+# About [WWWordList](https://github.com/Zarcolio/wwwordlist) ![](https://img.shields.io/github/license/Zarcolio/wwwordlist) ![](https://img.shields.io/github/stars/Zarcolio/wwwordlist) ![](https://img.shields.io/github/forks/Zarcolio/wwwordlist) ![](https://img.shields.io/github/issues/Zarcolio/wwwordlist) ![](https://img.shields.io/github/issues-closed-raw/Zarcolio/wwwordlist)
+WWWordList takes input from stdin and extracts words based on HTML (extracted with BS4), URLs, JS/HTTP/input variables, quoted texts found in the supplied text and mail files.
 
-# Why use wwwordlist?
+# Why use WWWordList?
 Because [Stök](https://twitter.com/stokfredrik) says you should use good wordlists, based on the content of the target. This is my attempt on creating a tool that supports this.
 
 # Install
-Wwwordlist should be able to run with a default Kali Linux installation with BS4 installed. To install BS4:
+WWWordList should be able to run with a default Kali Linux installation with BS4 installed. To install BS4:
 ```
 git clone https://github.com/Zarcolio/wwwordlist
 cd wwwordlist
 bash install.sh
 ```
-If you're running into trouble running wwwordlist, please drop me an issue and I'll try to fix it :)
+If you're running into trouble running WWWordList, please drop me an issue and I'll try to fix it :)
 
 # Usage
 ```
 usage: wwwordlist [-h] [-type <type>] [-case <o|l|u>] [-iwh <length>] [-iwn <length>] [-ii] 
 [-idu] [-min <length>] [-max <length>]
 
-Use wwwordlist to generate a wordlist from input.
+Use WWWordList to generate a wordlist from input.
 
 optional arguments:
   -h, -help      show this help message and exit
@@ -75,4 +75,8 @@ find . -type f -exec strings  {} +|wwwordlist
 ```
 
 # Contribute?
-Do you have some usefull additions to the script, please send in a pull request to help make this script better or contact me @ [Twitter](https://twitter.com/zarcolio) :)
+Do you have some usefull additions to WWWordList:
+
+* [![PR's Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](https://github.com/Zarcolio/wwwordlist/pulls) 
+* [![Twitter](https://img.shields.io/twitter/url/https/twitter.com/zarcolio.svg?style=social&label=Contact%20me)](https://twitter.com/zarcolio)
+
