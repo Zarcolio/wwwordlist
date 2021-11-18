@@ -11,7 +11,7 @@ WWWordList should be able to run with a default Kali Linux installation with BS4
 ```
 git clone https://github.com/Zarcolio/wwwordlist
 cd wwwordlist
-bash install.sh
+sudo bash install.sh
 ```
 When using the installer in an automated environment, use the following command for an automated installation:
 
