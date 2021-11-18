@@ -13,6 +13,13 @@ git clone https://github.com/Zarcolio/wwwordlist
 cd wwwordlist
 bash install.sh
 ```
+When using the installer in an automated environment, use the following command for an automated installation:
+
+```
+sudo bash install.sh -auto
+```
+
+
 If you're running into trouble running WWWordList, please drop me an issue and I'll try to fix it :)
 
 # Usage
