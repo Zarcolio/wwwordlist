@@ -49,7 +49,7 @@ optional arguments:
 ```
 
 # Examples
-If you want to build a wordlist based on the text between the HTML tags, simply run:
+If you want to build a wordlist based on the text between the HTML tags, simply run the following command and let the wordlist generation begin:
 ```
 cat index.html|wwwordlist -type html
 ```
