@@ -4,7 +4,7 @@
 WWWordList creates a wordlist by taking input from stdin and extracts words based on HTML (extracted with BS4), URLs, JS/HTTP/input variables, quoted texts found in the supplied text and mail files.
 
 # Why use WWWordList?
-Because [![Twitter](https://img.shields.io/twitter/url/https/twitter.com/stokfredrik.svg?style=social&label=Stök)](https://twitter.com/stokfredrik) says you should use good wordlists, based on the content of the target. This is my attempt on creating a tool that supports this.
+Because [![Twitter](https://img.shields.io/twitter/url/https/twitter.com/stokfredrik.svg?style=social&label=Stök)](https://twitter.com/stokfredrik) says you should use good wordlists, based on the content of the target. This is my attempt on creating a wordlist-generator that supports this.
 
 # Install
 WWWordList should be able to run with a default Kali Linux installation with BS4 installed. To install WWWordList including BS4:
