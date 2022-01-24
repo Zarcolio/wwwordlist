@@ -1,7 +1,7 @@
 ![](https://img.shields.io/github/license/Zarcolio/wwwordlist) ![](https://badges.pufler.dev/visits/Zarcolio/wwwordlist) ![](https://img.shields.io/github/stars/Zarcolio/wwwordlist) ![](https://img.shields.io/github/forks/Zarcolio/wwwordlist) ![](https://img.shields.io/github/issues/Zarcolio/wwwordlist) ![](https://img.shields.io/github/issues-closed-raw/Zarcolio/wwwordlist) ![](https://img.shields.io/github/issues-pr/Zarcolio/wwwordlist) ![](https://img.shields.io/github/issues-pr-closed-raw/Zarcolio/wwwordlist)
 
 # About [WWWordList](https://github.com/Zarcolio/wwwordlist)
-WWWordList creates a wordlist by taking input from stdin and extracts words based on HTML (extracted with BS4), URLs, JS/HTTP/input variables, quoted texts found in the supplied text and mail files.
+WWWordList is a wordlist-generator, it creates a wordlist by taking input from stdin and extracts words based on HTML (extracted with BS4), URLs, JS/HTTP/input variables, quoted texts found in the supplied text and mail files.
 
 # Why use WWWordList?
 Because [![Twitter](https://img.shields.io/twitter/url/https/twitter.com/stokfredrik.svg?style=social&label=Stök)](https://twitter.com/stokfredrik) says you should use good wordlists, based on the content of the target. This is my attempt on creating a wordlist-generator that supports this.
