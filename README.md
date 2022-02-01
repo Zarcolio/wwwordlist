@@ -2,6 +2,7 @@
 
 # About [WWWordList](https://github.com/Zarcolio/wwwordlist)
 WWWordList is a wordlist-generator, it creates a wordlist by taking input from stdin and extracts words based on HTML (extracted with BS4), URLs, JS/HTTP/input variables, quoted texts found in the supplied text and mail files.
+It isn't a scraper or spider, so Wwwordlist is used in conjunction with a tool that facilitates the downloading of HTML, for example wget. 
 
 # Why use WWWordList?
 Because [![Twitter](https://img.shields.io/twitter/url/https/twitter.com/stokfredrik.svg?style=social&label=Stök)](https://twitter.com/stokfredrik) says you should use good wordlists, based on the content of the target. This is my attempt on creating a wordlist-generator that supports this.
