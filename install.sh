@@ -14,14 +14,14 @@ ddir=$(pwd)
 			cd .. 
 			git clone https://github.com/Zarcolio/2ulb
 			sudo python3 2ulb/2ulb.py 2ulb/2ulb.py
-			cd $dir
+			cd "$dir"
 			sudo 2ulb $scriptname
 			exit 0
 		else
 			while true; do
-				read -p "2ulb not found, install 2ulb? [y/n]: " yn
+				read -p -r "2ulb not found, install 2ulb? [y/n]: " yn
 				case $yn in
-				    [Yy]*) cd .. ; git clone https://github.com/Zarcolio/2ulb ; sudo python3 2ulb/2ulb.py 2ulb/2ulb.py ; cd $dir ; sudo 2ulb $scriptname; exit 0 ;;
+				    [Yy]*) cd .. || exit; git clone https://github.com/Zarcolio/2ulb ; sudo python3 2ulb/2ulb.py 2ulb/2ulb.py ; cd "$dir" || exit ; sudo 2ulb $scriptname; exit 0 ;;
 				    [Nn]*) echo "Aborted" ; exit 1 ;;
 				esac
 			done
