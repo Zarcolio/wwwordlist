@@ -1,7 +1,7 @@
 ![](https://img.shields.io/github/license/Zarcolio/wwwordlist) ![](https://badges.pufler.dev/visits/Zarcolio/wwwordlist) ![](https://img.shields.io/github/stars/Zarcolio/wwwordlist) ![](https://img.shields.io/github/forks/Zarcolio/wwwordlist) ![](https://img.shields.io/github/issues/Zarcolio/wwwordlist) ![](https://img.shields.io/github/issues-closed-raw/Zarcolio/wwwordlist) ![](https://img.shields.io/github/issues-pr/Zarcolio/wwwordlist) ![](https://img.shields.io/github/issues-pr-closed-raw/Zarcolio/wwwordlist)
 
 # About [WWWordList](https://github.com/Zarcolio/wwwordlist)
-WWWordList is a wordlist-generator, it creates a wordlist by taking input from stdin and extracts words based on HTML (extracted with BS4), URLs, JS/HTTP/input variables, quoted texts found in the supplied text and mail files.
+WWWordList is a word list-generator for pentesters and bug bounty hunters. It creates a wordlist by taking input from stdin and extracts words based on HTML (extracted with BS4), URLs, JS/HTTP/input variables, quoted texts found in the supplied text and mail files.
 It isn't a scraper or spider, so Wwwordlist is used in conjunction with a tool that facilitates the downloading of HTML, for example wget. 
 
 # Why use WWWordList?
